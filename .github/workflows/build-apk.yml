@@ -8,12 +8,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verificar arquivos do projeto
+      - name: Preparar e verificar arquivos do projeto
         run: |
           ls -la
+          if [ ! -f package.json ]; then
+            Z=$(ls *.zip 2>/dev/null | head -1)
+            if [ -n "$Z" ]; then echo "Extraindo $Z"; unzip -o "$Z" -x ".github/*"; fi
+          fi
+          if [ ! -f www/index.html ] && [ -f index.html ]; then mkdir -p www && cp index.html www/; fi
+          missing=0
           for f in package.json capacitor.config.json www/index.html debug.keystore; do
-            [ -f "$f" ] || { echo "::error::Arquivo ausente no repositorio: $f"; exit 1; }
+            [ -f "$f" ] || { echo "::error::Arquivo ausente no repositorio: $f"; missing=1; }
           done
+          [ $missing -eq 0 ] || exit 1
       - uses: actions/setup-node@v4
         with:
           node-version: 20
