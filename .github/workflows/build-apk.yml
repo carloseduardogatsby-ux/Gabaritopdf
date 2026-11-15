@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Descompactar o zip do app
+        run: unzip -o acoci-app.zip
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
