@@ -29,9 +29,8 @@ jobs:
       - name: Criar projeto Android
         run: npx cap add android
 
-      - name: Permissões (localização, câmera)
-        run: |
-          sed -i 's#<application#<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/><uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/><uses-permission android:name="android.permission.CAMERA"/><application#' android/app/src/main/AndroidManifest.xml
+      - name: Permissões do Android
+        run: bash patch-android.sh
 
       - name: Copiar o app para o Android
         run: npx cap sync android
